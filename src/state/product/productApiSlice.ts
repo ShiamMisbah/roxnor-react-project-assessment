@@ -19,11 +19,14 @@ export const productApiSlice = createApi({
       getSingleProducts: builder.query({
         query: ({ id = "" }) => `/products/${id}`,
       }),
-      getSearchedProducts: builder.query({
-        query: ({ keyword = "" }) => `/products/search?q=${keyword}`,
+      getSearchedProducts: builder.query<ProductsResponse, {keyword?: string}>({
+        query: ({ keyword = "" }) => {
+          if (keyword === "") return ``
+          return `/products/search?q=${keyword}`;
+        },
       }),
       getCategories: builder.query({
-        query: () => `/products/categories`,
+        query: ({}) => `/products/categories`,
       }),
     };
   }

@@ -1,9 +1,15 @@
-import React, { useState } from "react";
-import { useGetProductsQuery } from "../../state/product/productApiSlice";
+import React, { useEffect, useState } from "react";
+import {
+  useGetCategoriesQuery,
+  useGetProductsQuery,
+  useGetSearchedProductsQuery,
+} from "../../state/product/productApiSlice";
 import { Button, Table, type TablePaginationConfig } from "antd";
-import type { Product } from "../../types/Product";
+import type { Product, ProductsResponse } from "../../types/Product";
 import type { ColumnsType } from "antd/es/table";
 import TableComponent from "../../components/TableComponent";
+import SearchTab from "../../components/SearchTab";
+import DropDownComponent from "../../components/DropDownComponent";
 
 const columns: ColumnsType<Product> = [
   {
@@ -47,14 +53,26 @@ const columns: ColumnsType<Product> = [
 const ProductPage = () => {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentResponse, setCurrentResponse] = useState<ProductsResponse>();
 
   const skip = (page - 1) * pageSize;
 
-  const { data: productData, isLoading, isError } = useGetProductsQuery({limit: pageSize, skip});
+  const {data: categoryList} = useGetCategoriesQuery({})  
+
+  const {
+    data: productData,
+    isLoading,
+    isError,
+  } = useGetProductsQuery({ limit: pageSize, skip });
+
+  const {
+    data: searchedProducts,
+    isLoading: searchedLoading,
+    isError: searchedEror,
+  } = useGetSearchedProductsQuery({ keyword: searchQuery });
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    console.log(pagination);
-    
     const currentPage = pagination.current ?? 1;
     const currentPageSize = pagination.pageSize ?? 10;
 
@@ -68,6 +86,14 @@ const ProductPage = () => {
     setPage(currentPage);
   };
 
+  useEffect(() => {
+    if (searchQuery.trim() === "") {
+      setCurrentResponse(productData);
+    } else {
+      setCurrentResponse(searchedProducts);
+    }
+  }, [productData, searchedProducts, searchQuery]);
+
   if (isError) {
     return <p>Failed to load products.</p>;
   }
@@ -75,13 +101,19 @@ const ProductPage = () => {
   if (isLoading) return <div>Is loading</div>;
   if (isError) return <div>Is Error</div>;
   return (
-    <div>
+    <div className="relative flex flex-col">
+      <SearchTab setSearchQuery={setSearchQuery} isLoading={searchedLoading} />
+      {categoryList && <DropDownComponent itemList={categoryList} />}
       <TableComponent
         columns={columns}
         handleTableChange={handleTableChange}
         isLoading={isLoading}
-        paginationDetails={{ currentPage: page, pageSize, totalPages: productData?.total }}
-        tableData={productData?.products}
+        paginationDetails={{
+          currentPage: page,
+          pageSize,
+          totalPages: currentResponse?.total,
+        }}
+        tableData={currentResponse?.products}
       />
     </div>
   );
