@@ -16,8 +16,9 @@ export const productApiSlice = createApi({
         query: ({ limit = 30, skip = 0 }) =>
           `/products?select=title,price,rating,stock,category&limit=${limit}&skip=${skip}`,
       }),
-      getSingleProducts: builder.query({
-        query: ({ id = "" }) => `/products/${id}`,
+      getSingleProducts: builder.query<Product, {id: number}>({
+        query: ({ id = "" }) =>
+          `/products/${id}?select=images,title,description,price,rating,stock,category`,
       }),
       getSearchedProducts: builder.query<
         ProductsResponse,
@@ -31,10 +32,11 @@ export const productApiSlice = createApi({
       getCategories: builder.query<ProductCategory[], {}>({
         query: ({}) => `/products/categories`,
       }),
-      getProductsCategories: builder.query<ProductsResponse, {slug: string}>({
-        query: ({slug}) => {
-          if (!slug || slug === "") return ``
-          return `/products/category/${slug}`},
+      getProductsCategories: builder.query<ProductsResponse, { slug: string }>({
+        query: ({ slug }) => {
+          if (!slug || slug === "") return ``;
+          return `/products/category/${slug}`;
+        },
       }),
     };
   }

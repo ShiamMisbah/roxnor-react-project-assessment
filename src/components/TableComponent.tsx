@@ -28,13 +28,17 @@ const TableComponent = ({
     totalPages: 0,
   },
   handleTableChange,
-}: TableComponentProps) => {
+}: TableComponentProps) => {  
   return (
     <Table
       rowKey="id"
       columns={columns}
       dataSource={tableData ?? []}
-      loading={isLoading}
+      loading={{
+        spinning: isLoading,
+        size: "large",
+        description: "Loading Data"
+      }}
       onChange={handleTableChange}
       pagination={{
         current: paginationDetails.currentPage,

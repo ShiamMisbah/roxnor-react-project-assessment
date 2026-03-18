@@ -1,0 +1,134 @@
+.product-page {
+    box-sizing: border-box;
+    width: 100%;
+
+    &__body {
+        max-width: 1200px;
+        min-height: 100%;
+        margin: 30px auto;
+        padding: 0 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    &__image-section {
+        width: 100%;
+        background-color: #9a9a9a4d;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    &__image {
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        height: 400px;
+        object-fit: contain;
+        color: #fff;
+        line-height: 160px;
+        text-align: center;
+    }
+
+    &__details {
+        width: 100%;
+        padding: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+    }
+
+    &__title-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    &__category {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 500;
+        color: #555;
+        text-align: right;
+    }
+
+    &__description {
+        p {
+            margin: 0;
+            font-size: 14px;
+            color: #9a9a9a;
+            line-height: 1.6;
+        }
+    }
+
+    &__stock {
+        p {
+            margin: 0;
+            font-size: 14px;
+            color: green;
+            font-weight: 500;
+        }
+    }
+}
+
+.ant-carousel .product-carousel-dots {
+    li {
+        width: 12px !important;
+        height: 12px !important;
+        margin: 0 6px !important;
+    }
+
+    li button {
+        width: 12px !important;
+        height: 12px !important;
+        border-radius: 50% !important;
+        background: #9a9a9a !important;
+        opacity: 1 !important;
+        padding: 0 !important;
+
+        &::before {
+            display: none !important;
+        }
+    }
+
+    li.slick-active {
+        &::after {
+            background: transparent;
+        }
+    }
+
+    li.slick-active button {
+        background: #000 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .product-page {
+        &__body {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+
+        &__image-section,
+        &__details {
+            width: 50%;
+        }
+
+        &__details {
+            padding: 10px 0 10px 24px;
+        }
+    }
+}

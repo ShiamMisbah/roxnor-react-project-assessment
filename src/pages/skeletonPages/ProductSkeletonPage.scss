@@ -1,15 +1,24 @@
-.mainDiv {
+.mainDiv_skeletal {
     display: flex;
     flex-direction: column;
     margin: 30px;
 
-    .searchBarSkeleton{
-        margin: auto;
-        margin-top: 20px;
+    .top_skeletal {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+
+        .searchBarSkeleton {
+            margin: 30px;
+        }
+        
+        .dropDownBarSkeleton {
+            margin: 30px;
+            margin-bottom: 50px;
+        }
+
     }
-    .dropDownBarSkeleton {
-        margin-top: 30px;
-        margin-bottom: 50px;
-    }
+
+
 }
 

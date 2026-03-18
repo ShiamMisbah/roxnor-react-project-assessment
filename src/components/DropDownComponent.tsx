@@ -1,6 +1,6 @@
 import { Select } from 'antd';
 import type { ProductCategory } from '../types/Product';
-import "./DropDownComponent.scss";
+import '../index.scss'
 
 type DropDownComponentProps = {
   itemList: ProductCategory[];

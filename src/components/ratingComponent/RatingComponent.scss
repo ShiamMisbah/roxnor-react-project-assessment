@@ -1,0 +1,28 @@
+.rating-component {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+    align-items: center;
+
+    &__label {
+        font-size: 12px;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    &__stars {
+        display: flex;
+        gap: 4px;
+    }
+
+    &__star {
+        position: relative;
+        display: inline-block;
+    }
+
+    &__star-fill {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+    }
+}

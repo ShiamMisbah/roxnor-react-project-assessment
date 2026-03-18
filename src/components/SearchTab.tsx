@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import Search from 'antd/es/input/Search';
 import React, { useState } from 'react'
+import '../index.scss'
 
 type SearchTabProps = {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -10,9 +11,10 @@ type SearchTabProps = {
 
 const SearchTab = ({ setSearchQuery, isLoading }: SearchTabProps) => {
   return (
-    <>
+    <div className='mainDiv'>
+      <label htmlFor="">Category</label>
       <Search
-        className="max-w-[50%] mx-auto my-4"
+        className="w-full"
         placeholder="input search text"
         enterButton="Search"
         size="large"
@@ -20,7 +22,7 @@ const SearchTab = ({ setSearchQuery, isLoading }: SearchTabProps) => {
         onSearch={(e) => setSearchQuery(e)}
         allowClear
       />
-    </>
+    </div>
   );
 };
 

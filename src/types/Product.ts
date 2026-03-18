@@ -5,6 +5,8 @@ export type Product = {
   rating: number;
   stock: number;
   category: string;
+  description?: string;
+  images?: string[]
 };
 
 export type ProductsResponse = {
