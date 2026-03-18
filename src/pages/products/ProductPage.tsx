@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import {
   useGetCategoriesQuery,
+  useGetProductsCategoriesQuery,
   useGetProductsQuery,
   useGetSearchedProductsQuery,
 } from "../../state/product/productApiSlice";
-import { Button, Table, type TablePaginationConfig } from "antd";
+import { Button, Skeleton, Table, type TablePaginationConfig } from "antd";
 import type { Product, ProductsResponse } from "../../types/Product";
 import type { ColumnsType } from "antd/es/table";
 import TableComponent from "../../components/TableComponent";
 import SearchTab from "../../components/SearchTab";
 import DropDownComponent from "../../components/DropDownComponent";
+import ProductSkeletonPage from "../skeletonPages/ProductSkeletonPage";
 
 const columns: ColumnsType<Product> = [
   {
@@ -46,7 +48,7 @@ const columns: ColumnsType<Product> = [
   {
     title: "Action",
     key: "action",
-    render: (_, record) => <Button>View {record.id}</Button>,
+    render: (_, record) => <Button>View Product {record.id}</Button>,
   },
 ];
 
@@ -55,10 +57,11 @@ const ProductPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentResponse, setCurrentResponse] = useState<ProductsResponse>();
+  const [currentSlug, setCurrentSlug] = useState<string>("all");
 
   const skip = (page - 1) * pageSize;
 
-  const {data: categoryList} = useGetCategoriesQuery({})  
+  const { data: categoryList } = useGetCategoriesQuery({});
 
   const {
     data: productData,
@@ -69,8 +72,14 @@ const ProductPage = () => {
   const {
     data: searchedProducts,
     isLoading: searchedLoading,
-    isError: searchedEror,
+    isError: searchedError,
   } = useGetSearchedProductsQuery({ keyword: searchQuery });
+
+  const {
+    data: searchedProductsByCategory,
+    isLoading: searchedLoadingProductsByCategory,
+    isError: searchedErrorProductsByCategory,
+  } = useGetProductsCategoriesQuery({ slug: currentSlug });
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     const currentPage = pagination.current ?? 1;
@@ -86,24 +95,38 @@ const ProductPage = () => {
     setPage(currentPage);
   };
 
-  useEffect(() => {
-    if (searchQuery.trim() === "") {
-      setCurrentResponse(productData);
-    } else {
+  useEffect(() => {    
+    const hasSearch = searchQuery.trim() !== "";
+    const hasCategory = currentSlug.trim() !== "all";
+    
+    if (hasSearch) {      
       setCurrentResponse(searchedProducts);
+      return;
+    } else {
+      setCurrentResponse(hasCategory ? searchedProductsByCategory : productData);
+      return;
     }
-  }, [productData, searchedProducts, searchQuery]);
+  }, [
+    productData,
+    searchedProducts,
+    searchedProductsByCategory,
+    searchQuery,
+    currentSlug,
+  ]);
 
-  if (isError) {
-    return <p>Failed to load products.</p>;
-  }
-
-  if (isLoading) return <div>Is loading</div>;
+  if (isLoading) return (
+    <ProductSkeletonPage />
+  );
   if (isError) return <div>Is Error</div>;
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col md:px-4">
       <SearchTab setSearchQuery={setSearchQuery} isLoading={searchedLoading} />
-      {categoryList && <DropDownComponent itemList={categoryList} />}
+      {categoryList && (
+        <DropDownComponent
+          itemList={categoryList}
+          setCurrentSlug={setCurrentSlug}
+        />
+      )}
       <TableComponent
         columns={columns}
         handleTableChange={handleTableChange}

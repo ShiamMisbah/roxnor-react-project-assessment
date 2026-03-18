@@ -1,8 +1,10 @@
 import { Select } from 'antd';
 import type { ProductCategory } from '../types/Product';
+import "./DropDownComponent.scss";
 
 type DropDownComponentProps = {
   itemList: ProductCategory[];
+  setCurrentSlug: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export type DropDownItemProperty = {
@@ -10,27 +12,31 @@ export type DropDownItemProperty = {
     label: string
 };
 
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
-
-const onSearch = (value: string) => {
-  console.log("search:", value);
-};
-
-const DropDownComponent = ({ itemList }: DropDownComponentProps) => {
+const DropDownComponent = ({
+  itemList,
+  setCurrentSlug,
+}: DropDownComponentProps) => {
+  const handleChange = (value: string) => {
+    setCurrentSlug(value);
+  };
   return (
-    <Select
-      showSearch={{ optionFilterProp: "label", onSearch }}
-      placeholder="Select a person"
-      defaultValue="All"
-      style={{ width: 240 }}
-      onChange={handleChange}
-      options={itemList.map((item) => ({
-        value: item.slug,
-        label: item.name,
-      }))}
-    />
+    <div className='mainDiv'>
+      <label htmlFor="">Category</label>
+      <Select
+        showSearch={{ optionFilterProp: "label" }}
+        placeholder="Select a person"
+        defaultValue="all"
+        style={{ width: 240 }}
+        onChange={handleChange}
+        options={[
+          { value: "all", label: "All" },
+          ...itemList.map((item) => ({
+            value: item.slug,
+            label: item.name,
+          })),
+        ]}
+      />
+    </div>
   );
 };
 

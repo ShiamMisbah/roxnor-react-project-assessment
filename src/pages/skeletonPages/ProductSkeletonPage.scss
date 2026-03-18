@@ -1,0 +1,15 @@
+.mainDiv {
+    display: flex;
+    flex-direction: column;
+    margin: 30px;
+
+    .searchBarSkeleton{
+        margin: auto;
+        margin-top: 20px;
+    }
+    .dropDownBarSkeleton {
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
+}
+

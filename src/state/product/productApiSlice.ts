@@ -1,6 +1,6 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 import { createApi } from "@reduxjs/toolkit/query/react";
-import type { Product, ProductsResponse } from "../../types/Product";
+import type { Product, ProductCategory, ProductsResponse } from "../../types/Product";
 
 export const productApiSlice = createApi({
   reducerPath: "Products",
@@ -19,17 +19,25 @@ export const productApiSlice = createApi({
       getSingleProducts: builder.query({
         query: ({ id = "" }) => `/products/${id}`,
       }),
-      getSearchedProducts: builder.query<ProductsResponse, {keyword?: string}>({
+      getSearchedProducts: builder.query<
+        ProductsResponse,
+        { keyword?: string }
+      >({
         query: ({ keyword = "" }) => {
-          if (keyword === "") return ``
+          if (keyword === "") return ``;
           return `/products/search?q=${keyword}`;
         },
       }),
-      getCategories: builder.query({
+      getCategories: builder.query<ProductCategory[], {}>({
         query: ({}) => `/products/categories`,
+      }),
+      getProductsCategories: builder.query<ProductsResponse, {slug: string}>({
+        query: ({slug}) => {
+          if (!slug || slug === "") return ``
+          return `/products/category/${slug}`},
       }),
     };
   }
 });
 
-export const { useGetCategoriesQuery, useGetSearchedProductsQuery, useGetProductsQuery, useGetSingleProductsQuery } = productApiSlice
+export const { useGetCategoriesQuery, useGetSearchedProductsQuery, useGetProductsQuery, useGetSingleProductsQuery, useGetProductsCategoriesQuery } = productApiSlice
