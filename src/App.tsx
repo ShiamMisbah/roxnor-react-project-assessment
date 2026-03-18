@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import ProductPage from './pages/products/ProductPage';
 import SingleProductPage from './pages/singleProduct/SingleProductPage';
 
@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/product" element={<ProductPage />} />
         <Route path="/product/:id" element={<SingleProductPage />} />
-        <Route path="*" element={<ProductPage />} />
+        <Route path="*" element={<Navigate to="/product" replace />} />
       </Routes>
     </div>
   );

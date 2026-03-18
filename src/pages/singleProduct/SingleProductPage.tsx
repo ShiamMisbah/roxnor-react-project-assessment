@@ -56,7 +56,7 @@ const SingleProductPage = (props: Props) => {
         <Error404Page />
       </div>
     );
-
+  if (!data) return <Error404Page />;
   return (
     <div className="product-page">
       <div className="product-page__body">

@@ -13,6 +13,7 @@ import SearchTab from "../../components/SearchTab";
 import DropDownComponent from "../../components/DropDownComponent";
 import ProductSkeletonPage from "../skeletonPages/ProductSkeletonPage";
 import { Link } from "react-router-dom";
+import GenericErrorPage from "../errorPage/GenericErrorPage";
 
 const columns: ColumnsType<Product> = [
   {
@@ -65,6 +66,10 @@ const ProductPage = () => {
 
   const [currentSlug, setCurrentSlug] = useState<string>("all");
 
+  const [currentIsLoading, setCurrentIsLoading] = useState<boolean>(false);
+  const [currentIsError, setCurrentIsError] = useState<boolean>(false);
+  const [currentError, setCurrentError] = useState<any>(null);
+
   const skip = (page - 1) * pageSize;
 
   const { data: categoryList } = useGetCategoriesQuery({});
@@ -73,21 +78,23 @@ const ProductPage = () => {
     data: productData,
     isLoading,
     isError,
+    error
   } = useGetProductsQuery({ limit: pageSize, skip });
 
   const {
     data: searchedProducts,
     isLoading: searchedLoading,
     isError: searchedError,
+    error: searchedErrorDetails
   } = useGetSearchedProductsQuery({ keyword: searchQuery });
 
   const {
     data: searchedProductsByCategory,
     isLoading: searchedLoadingProductsByCategory,
     isError: searchedErrorProductsByCategory,
+    error: searchedErrorProductsByCategoryDetails,
   } = useGetProductsCategoriesQuery({ slug: currentSlug });  
 
-  const [currentIsLoading, setCurrentIsLoading] = useState<boolean>(isLoading);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     const currentPage = pagination.current ?? 1;
@@ -119,21 +126,43 @@ const ProductPage = () => {
         ? searchedLoadingProductsByCategory
         : isLoading;
 
+    const nextIsError = hasSearch
+      ? searchedError
+      : hasCategory
+        ? searchedErrorProductsByCategory
+        : isError;
+
+    const nextError = hasSearch
+      ? searchedErrorDetails
+      : hasCategory
+        ? searchedErrorProductsByCategoryDetails
+        : error;
+
     setCurrentResponse(nextResponse);
     setCurrentIsLoading(nextLoading);
+    setCurrentIsError(nextIsError);
+    setCurrentError(nextError);
   }, [
     searchQuery,
     currentSlug,
     searchedProducts,
     searchedLoading,
+    searchedError,
+    searchedErrorDetails,
     searchedProductsByCategory,
     searchedLoadingProductsByCategory,
+    searchedErrorProductsByCategory,
+    searchedErrorProductsByCategoryDetails,
     productData,
     isLoading,
+    isError,
+    error,
   ]);
 
-  if (isLoading) return <ProductSkeletonPage />;
-  if (isError) return <div>Is Error</div>;
+  if (currentIsLoading) return <ProductSkeletonPage />;
+  if (currentIsError) {
+    return <GenericErrorPage currentError={currentError} />;
+  }
   return (
     <div className="relative flex flex-col md:px-4">
       <div className="flex justify-center items-end gap-4">
