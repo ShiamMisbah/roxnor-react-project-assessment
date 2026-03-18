@@ -107,3 +107,14 @@ That improves consistency and keeps page-level rendering rules explicit.
 ## Summary
 
 The architecture favors clarity over complexity. RTK Query handles remote data, Redux stores selected product UI state, pages coordinate behavior, and shared components stay lightweight. For a small-to-medium dashboard app, this is a practical and scalable foundation.
+
+## Run the project locally
+
+1. Install dependencies:
+```bash
+npm install
+```
+2. Run Project locally
+```bash
+npm run dev
+```
