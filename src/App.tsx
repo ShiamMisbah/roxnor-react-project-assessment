@@ -1,6 +1,4 @@
-import { useState } from 'react'
-import './App.css'
-import { Link, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import ProductPage from './pages/products/ProductPage';
 import SingleProductPage from './pages/singleProduct/SingleProductPage';
 

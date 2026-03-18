@@ -1,14 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetSingleProductsQuery } from "../../state/product/productApiSlice";
 import Error404Page from "../errorPage/Error404Page";
 import './SingleProductPage.scss'
-import { Carousel } from "antd";
+import { Button, Carousel } from "antd";
 import RatingComponent from "../../components/ratingComponent/RatingComponent";
+import SingleProductSkeleton from "../skeletonPages/SingleProductSkeleton";
+import DrawerComponent from "../../components/DrawerComponent";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../../state/store";
+import { currentProduct } from "../../state/product/productSlice";
 
 type Props = {};
 
 const SingleProductPage = (props: Props) => {
+  const dispatch = useDispatch<AppDispatch>()
+
+  const [open, setOpen] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   const numericId = Number(id);
@@ -18,7 +26,21 @@ const SingleProductPage = (props: Props) => {
   const { data, isLoading, isError, error } = useGetSingleProductsQuery(
     { id: numericId },
     { skip: !isValidId },
-  );
+  );  
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    if (data) {
+      dispatch(currentProduct(data));      
+    }
+  }, [data])
 
   if (!id)
     return (
@@ -26,8 +48,7 @@ const SingleProductPage = (props: Props) => {
         <Error404Page />
       </div>
     );
-  if (isLoading) return <div>Loading...</div>;
-  console.log(data);
+  if (isLoading) return <SingleProductSkeleton />;
 
   if (isError && error.status === 404)
     return (
@@ -36,16 +57,14 @@ const SingleProductPage = (props: Props) => {
       </div>
     );
 
-    const onChange = (currentSlide: number) => {
-      console.log(currentSlide);
-    };
-
   return (
     <div className="product-page">
       <div className="product-page__body">
         <div className="product-page__image-section">
+          <Button onClick={showDrawer} className="product-page__edit-button">
+            Edit
+          </Button>
           <Carousel
-            afterChange={onChange}
             dots={{ className: "product-carousel-dots" }}
           >
             {data?.images?.map((imageUrl, index) => (
@@ -65,10 +84,12 @@ const SingleProductPage = (props: Props) => {
               <h2 className="product-page__title">{data?.title}</h2>
               {data?.rating && <RatingComponent rating={data.rating} />}
             </div>
-
-            <h5 className="product-page__category">
-              {data?.category?.toUpperCase()}
-            </h5>
+            <div className="product-page__price-wrap">
+              <h5 className="product-page__price">$ {data?.price}</h5>
+              <h5 className="product-page__category">
+                {data?.category?.toUpperCase()}
+              </h5>
+            </div>
           </div>
 
           <div className="product-page__description">
@@ -80,6 +101,7 @@ const SingleProductPage = (props: Props) => {
           </div>
         </div>
       </div>
+      <DrawerComponent open={open} onClose={onClose} />
     </div>
   );
 };

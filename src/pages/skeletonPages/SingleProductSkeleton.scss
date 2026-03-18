@@ -1,0 +1,114 @@
+.product-page-skeleton {
+    width: 100%;
+    box-sizing: border-box;
+
+    &__body {
+        max-width: 1200px;
+        min-height: 100%;
+        margin: 30px auto;
+        padding: 0 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    &__image-section {
+        width: 100%;
+        background-color: #f7f7f7;
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    &__image {
+        width: 100% !important;
+        height: 400px !important;
+        display: flex !important;
+
+        .ant-skeleton-image {
+            width: 100% !important;
+            height: 400px !important;
+            border-radius: 12px;
+        }
+    }
+
+    &__dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 16px;
+    }
+
+    &__dot {
+        .ant-skeleton-button {
+            width: 12px !important;
+            min-width: 12px !important;
+            height: 12px !important;
+        }
+    }
+
+    &__details {
+        width: 100%;
+        padding: 20px 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 16px;
+    }
+
+    &__title-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+    }
+
+    &__title {
+        width: 220px !important;
+        max-width: 100%;
+    }
+
+    &__rating {
+        width: 120px !important;
+    }
+
+    &__category {
+        width: 90px !important;
+        flex-shrink: 0;
+    }
+
+    &__stock {
+        width: 140px !important;
+    }
+
+    .ant-skeleton-input {
+        border-radius: 8px;
+    }
+
+    .ant-skeleton-paragraph {
+        margin-block-start: 0 !important;
+    }
+}
+
+@media (min-width: 768px) {
+    .product-page-skeleton {
+        &__body {
+            flex-direction: row;
+            align-items: flex-start;
+        }
+
+        &__image-section,
+        &__details {
+            width: 50%;
+        }
+
+        &__details {
+            padding: 10px 0 10px 24px;
+        }
+    }
+}
